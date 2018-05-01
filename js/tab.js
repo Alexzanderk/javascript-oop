@@ -3,8 +3,12 @@ export default class Tab {
      * Создает вкладку.
      * @param {{ element: HTMLElement, onActivate: Function }} args
      */
-    constructor() {
+    constructor({element, onActivate = ()=> {}}) {
+        this._element = element;
+        this._active = false;
+        this._onActivate = onActivate;
 
+        this.init();
     }
 
     /**
@@ -14,21 +18,22 @@ export default class Tab {
      * @private
      */
     init() {
-
+        this._active = this._element.classList.contains('active');
+        this._element.addEventListener('click', this.handleClick.bind(this));
     }
 
     /**
      * Возвращает HTML элемент.
      * @returns {HTMLElement}
      */
-    get element() {  }
+    get element() { return this._element; }
 
     /**
      * Возвращает ID вкладки.
      * ID вкладки берется из атрибута `hash` у элемента (`#panel-1` => `panel-1`)
      * @returns {string}
      */
-    get id() {  }
+    get id() { return this.element.hash.slice(1) }
 
     /**
      * `get` - Возвращает `true` или `false` в зависимости от того активна вкладка или нет.
@@ -36,9 +41,10 @@ export default class Tab {
      * `set` - Устанавливает активность вкладки, добавляя или удаляя соответствующий класс
      * @returns {boolean}
      */
-    get isActive() {  }
-    set isActive() {
-
+    get isActive() { return this._active; }
+    set isActive(value) {
+        this._active = value;
+        this._element.classList.toggle('active', value);
     }
 
     /**
@@ -50,6 +56,9 @@ export default class Tab {
      * @param {Event} event 
      */
     handleClick(event) {
-
+        event.preventDefault();
+        
+        this.isActive = true;
+        this._onActivate(this);
     }
 }
