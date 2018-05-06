@@ -1,11 +1,11 @@
-const Input = require('../input/');
+const Input = require('../input');
 
 class Checkbox extends Input {
     /**
      * @param {{ tag: string, id: string, className: string, type: string, name: string, disabled: boolean, required: boolean, checked: boolean }} args 
      */
     constructor({ checked = false, ...args }) {
-        
+        super({type: 'checkbox', value: checked, ...args});
     }
 
     /**
@@ -15,15 +15,20 @@ class Checkbox extends Input {
      * 
      * @returns {boolean}
      */
-    get checked() {  }
-    set checked(value) {  }
+    get checked() { return this.value; }
+    set checked(value) { this.value = value; }
 
     /**
      * Проверяет валидность значения
      * @returns {boolean}
      */
     get isValid() {
-        
+        let isValid = super.isValid;
+
+        if (typeof this.value !== 'boolean')
+            isValid = false;
+
+        return isValid;
     }
 }
 

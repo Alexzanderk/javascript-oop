@@ -5,7 +5,14 @@ class Input extends Element {
      * @param {{ tag: string, id: string, className: string, type: string, name: string, disabled: boolean, required: boolean }} args 
      */
     constructor({ type = 'text', name, value, disabled = false, required = false, ...args }) {
-        
+        super({tag: 'input', ...args});
+
+        this.type = type;
+        this.name = name;
+        this.value = value,
+        this.disabled = disabled;
+        this.required = required;
+
     }
 
     /**
@@ -15,9 +22,10 @@ class Input extends Element {
      * 
      * @returns {boolean}
      */
-    get value() {  }
+    get value() { return this._value }
     set value(value) {
-        
+        this._value = value;
+        this.emit('change', this._value);
     }
 
     /**
@@ -28,7 +36,7 @@ class Input extends Element {
      * @returns {boolean}
      */
     get isValid() {
-        
+        return (this.required && this.value === undefined) ? false : true;        
     }
 }
 

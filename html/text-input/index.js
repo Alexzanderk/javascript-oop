@@ -5,7 +5,10 @@ class TextInput extends Input {
      * @param {{ tag: string, id: string, className: string, type: string, name: string, disabled: boolean, required: boolean, value: string, minlength: string, maxlength: string }} args 
      */
     constructor({ value = '', minlength, maxlength, ...args }) {
-        
+        super({type: 'text', value: value, ...args});
+
+        this.minlength = minlength;
+        this.maxlength = maxlength;
     }
 
     /**
@@ -16,7 +19,13 @@ class TextInput extends Input {
      * @returns {boolean}
      */
     get isValid() {
+        let isValid = super.isValid;
+
+        if ((this.minlength && this.value.length < this.minlength) ||
+            (this.maxlength && this.value.length > this.maxlength))
+            isValid = false;
         
+        return isValid;
     }
 }
 
